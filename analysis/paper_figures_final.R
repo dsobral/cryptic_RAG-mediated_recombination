@@ -264,7 +264,8 @@ merged.data.maxREC.selection<-merged.data.maxREC[,c("type","REC", "CTCFdist", "3
 names<-colnames(merged.data.maxREC.selection)
 names[4]<-expression(paste("3C-E",beta))
 names[1]<-NULL
-png(filename="Fig5a.png",width=1200, height=600,units="px",type="cairo")
+#png(filename="Fig5a.png",width=1200, height=600,units="px",type="cairo")
+svg(filename="Fig5a.svg",width=12, height=6)
 do_summary_plot(merged.data.maxREC.selection, names)
 dev.off()
 #End Fig5A
@@ -446,7 +447,8 @@ recdatabcl11_sensitive<-recdatabcl11[recdatabcl11$PASS.FAIL.REC.sensitive==1,]
 
 ctcfdatabcl11<-read.table("../data/GSM1023416_CTCF_DN_peaks_track.NCBIM37.bcl11b_NCBI37.bed",sep="\t")
 
-png(filename="Fig6.png",width=1200, height=600,units="px",type="cairo")
+#png(filename="Fig6.png",width=1200, height=600,units="px",type="cairo")
+svg(filename="Fig6.svg",width=12, height=6)
 
 par(cex.axis=1.2)
 plot(c(bcl11start,bcl11stop),c(0,10),type='n',axes=FALSE,ylab="",xlab="",main="Bcl11b locus",ylim=c(3.5,10))
@@ -538,13 +540,11 @@ for (i in 1:repeats) {
   data_fvd[i,]<-as.vector(t(rf$confusion[,c(1,2,3)]/rowSums(rf$confusion[,c(1,2,3)])))
 }
 melted.data<-melt(data_fvd)
-melted.data$variable<-ordered(melted.data$variable, levels = c("vRSS_vRSS","vRSS_cRSS","vRSS_nonRSS","cRSS_vRSS","cRSS_cRSS","cRSS_nonRSS","nonRSS_vRSS","nonRSS_cRSS", "nonRSS_nonRSS"))
-#Change order to be consistent with Fig5A
-grayPallete<-c("#555555","#555555","#555555","#888888","#888888","#888888","#BBBBBB","#BBBBBB","#BBBBBB")
+melted.data$variable<-ordered(melted.data$variable, levels = c("cRSS_cRSS", "cRSS_nonRSS","cRSS_vRSS","nonRSS_cRSS", "nonRSS_nonRSS", "nonRSS_vRSS", "vRSS_cRSS","vRSS_nonRSS","vRSS_vRSS"))
+grayPallete<-c("#555555","#888888","#BBBBBB","#555555","#888888","#BBBBBB","#555555","#888888","#BBBBBB")
 summaries<-summarySE(melted.data,measurevar = "value", groupvars = c("variable"),na.rm = TRUE)
-
-png(filename="Fig5b.png",width=1000, height=600,units="px",type="cairo")
-ggplot(summaries, aes(x=variable, y=value, fill=variable)) + geom_bar(position=position_dodge(), stat="identity") + geom_errorbar(aes(ymin=value-ci, ymax=value+ci), width=.2, position=position_dodge(.9),colour="#000000")  + scale_fill_manual("Prediction_Real",values=grayPallete, guide=FALSE) + theme_bw() + theme(axis.text=element_text(size=14), axis.title=element_text(size=14,face="bold"), axis.text.x = element_text(angle = 45, hjust = 1,size=14),axis.text.y=element_text(size=14) ) +xlab("")+ylab("Frequency of Prediction")
+png(filename="Fig5_20_Dec_2018.png",width=1000, height=600,units="px",type="cairo")
+ggplot(summaries, aes(x=variable, y=value, fill=variable)) + geom_bar(position=position_dodge(), stat="identity") + geom_errorbar(aes(ymin=value-ci, ymax=value+ci), width=.2, position=position_dodge(.9),colour="#000000")  + scale_fill_manual("Prediction_Real",values=grayPallete) + theme_bw() + theme(axis.text=element_text(size=14), axis.title=element_text(size=14,face="bold"), axis.text.x = element_text(angle = 45, hjust = 1,size=14),axis.text.y=element_text(size=14) ) +xlab("")+ylab("Frequency of Prediction") 
 dev.off()
 #END Fig5b
 
